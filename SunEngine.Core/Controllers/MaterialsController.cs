@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SunEngine.Core.Cache.Services;
+using SunEngine.Core.Cache.Services.Counters;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
 using SunEngine.Core.Filters;
@@ -25,18 +26,21 @@ namespace SunEngine.Core.Controllers
         protected readonly ICategoriesCache categoriesCache;
         protected readonly IMaterialsManager materialsManager;
         protected readonly IMaterialsPresenter materialsPresenter;
-
+        protected readonly IMaterialsVisitsCounterCache materialsVisitsCounterCache;
+        
         public MaterialsController(
             MaterialsAuthorization materialsAuthorization,
             ICategoriesCache categoriesCache,
             IMaterialsManager materialsManager,
             IMaterialsPresenter materialsPresenter,
+            IMaterialsVisitsCounterCache materialsVisitsCounterCache,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             this.materialsAuthorization = materialsAuthorization;
             this.categoriesCache = categoriesCache;
             this.materialsManager = materialsManager;
             this.materialsPresenter = materialsPresenter;
+            this.materialsVisitsCounterCache = materialsVisitsCounterCache;
         }
 
         [HttpPost]
@@ -65,6 +69,8 @@ namespace SunEngine.Core.Controllers
             if (materialView.DeletedDate != null && !materialsAuthorization.CanRestoreAsync(User, category.Id))
                 return Unauthorized();
 
+            materialView.VisitsCount += materialsVisitsCounterCache.CountMaterial(UserOrIpKey, materialView.Id);
+            
             return Json(materialView);
         }
 

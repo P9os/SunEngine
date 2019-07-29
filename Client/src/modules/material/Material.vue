@@ -34,7 +34,7 @@
             <q-icon name="fas fa-edit" class="q-mr-xs"/>
             {{$tl("edit")}}</a>
         </div>
-        <div class="q-mr-md" v-if="!material.deletedDate && canDelete">
+        <div class="q-mr-lg" v-if="!material.deletedDate && canDelete">
           <a href="#" style="display: inline-flex; align-items: center;"
              @click.prevent="deleteMaterial">
             <q-icon name="fas fa-trash"/>
@@ -46,11 +46,16 @@
             <q-icon name="fas fa-trash-restore"/>
           </a>
         </div>
-        <div class="mat-date-color">
-          <q-icon name="far fa-clock"/>
+        <div class="visits footer-info-block q-mr-md">
+          <q-icon name="far fa-eye" class="q-mr-xs"/>
+          {{material.visitsCount}}
+        </div>
+        <div class="mat-date footer-info-block">
+          <q-icon name="far fa-clock" class="q-mr-xs"/>
           {{$formatDate(material.publishDate)}}
         </div>
       </div>
+
 
       <div class="clear"></div>
     </div>
@@ -165,7 +170,7 @@
     },
     methods: {
       prepareLocalLinks() {
-        prepareLocalLinks(this.$el,'material-text');
+        prepareLocalLinks(this.$el, 'material-text');
       },
       async loadDataMaterial() {
         await this.$store.dispatch('request',
@@ -248,7 +253,7 @@
 <style lang="stylus">
 
   .material {
-    .mat-date-color {
+    .footer-info-block {
       color: $grey-7;
     }
 
