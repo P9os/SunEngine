@@ -13,7 +13,6 @@ using SunEngine.Core.Errors;
 using SunEngine.Core.Security;
 using SunEngine.Core.Services;
 using SunEngine.Core.Utils;
-using SunEngine.Core.Utils.TextProcess;
 
 namespace SunEngine.Cli
 {

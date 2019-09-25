@@ -3,15 +3,11 @@ using System.Linq;
 using System.Reflection;
 using System.Transactions;
 using LinqToDB;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using SunEngine.Admin.Managers;
 using SunEngine.Core.Cache.Services;
-using SunEngine.Core.Configuration.Options;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
 using SunEngine.Core.Models;
-using SunEngine.Core.Services;
 using Xunit;
 using Xunit.Sdk;
 
