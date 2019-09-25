@@ -102,10 +102,6 @@ namespace SunEngine.Core.Managers
             material.Text = sanitizerService.Sanitize(doc);
             material.SettingsJson = material.SettingsJson?.MakeJsonText();
 
-            var generator = categoriesCache.GetMaterialsPreviewGenerator(category.MaterialsPreviewGeneratorName);
-            material.Preview = generator(doc, materialsOptions.PreviewLength);
-
-
             switch (category.MaterialsSubTitleInputType)
             {
                 case MaterialsSubTitleInputType.Manual:
@@ -137,9 +133,6 @@ namespace SunEngine.Core.Managers
 
             material.Text = sanitizerService.Sanitize(doc);
             material.SettingsJson = material.SettingsJson?.MakeJsonText();
-
-            var generator = categoriesCache.GetMaterialsPreviewGenerator(category.MaterialsPreviewGeneratorName);
-            material.Preview = generator(doc, materialsOptions.PreviewLength);
 
 
             switch (category.MaterialsSubTitleInputType)
@@ -179,7 +172,7 @@ namespace SunEngine.Core.Managers
 
         public virtual Task<bool> IsNameInDbAsync(string name)
         {
-            return db.Materials.AnyAsync(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            return db.Materials.AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
 
         public async ValueTask UpAsync(int id)
