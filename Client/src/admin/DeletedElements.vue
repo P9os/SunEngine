@@ -10,6 +10,8 @@
     <div class="info-box1">{{$tl("info1")}}</div>
     <div class="info-box1">{{$tl("info2")}}</div>
     <div class="info-box1">{{$tl("info3")}}</div>
+
+    <q-btn @click="fullDeleteMaterials" label="$tl('fullDeleteMaterials')"/>
   </q-page>
 </template>
 
@@ -22,6 +24,19 @@
         mixins: [Page],
         created() {
             this.title = this.$tl('title');
+        },
+        methods: {
+            fullDeleteMaterials() {
+                this.$request(this.$Api.DeletedElements.fullDeleteMaterials,
+                    //{
+                    //    name: "Dima",
+                    //    id: 15
+                    //}
+                ).then(_ => {
+                    this.$successNotify();
+                })
+
+            }
         }
     }
 
