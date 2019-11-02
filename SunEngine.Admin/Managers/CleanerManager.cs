@@ -5,7 +5,7 @@ using SunEngine.Core.DataBase;
 
 namespace SunEngine.Admin.Services
 {
-    public interface ICleanerService
+    public interface ICleanerManager
     {
         Task DeleteMaterial(int idMaterial);
 
@@ -16,11 +16,11 @@ namespace SunEngine.Admin.Services
         Task DeleteAllDeleteComments();
     }
 
-    public class CleanerService : ICleanerService
+    public class CleanerManager : ICleanerManager
     {
         private readonly DataBaseConnection db;
 
-        public CleanerService(
+        public CleanerManager(
             DataBaseConnection dataBaseConnection)
         {
             db = dataBaseConnection;
