@@ -1,5 +1,5 @@
 <template>
-  <q-list class="admin-menu my-menu" no-border>
+  <q-list class="admin-menu sun-second-menu" no-border>
 
     <q-item :to="{name: 'MenuItemsAdmin'}">
       <q-item-section avatar>
@@ -91,9 +91,20 @@
       </q-item-section>
     </q-item>
 
-    <div class="text-grey-7 q-mt-xl text-center" v-if="version">
+    <q-item clickable @click="resetCache" >
+      <q-item-section avatar>
+        <q-icon name="fas fa-sync-alt"/>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ $tl("resetCache") }}</q-item-label>
+        <q-item-label v-if="deletedElementsCaption" caption>{{deletedElementsCaption}}</q-item-label>
+      </q-item-section>
+    </q-item>
+
+    <div class="admin-menu__version text-grey-7 q-mt-xl text-center" v-if="version">
       {{$tl("version")}}: {{version}}
     </div>
+
   </q-list>
 
 </template>
@@ -134,6 +145,9 @@
             },
             cypherSecretsCaption() {
                 return this.$tl("cypherSecretsCaption") ?? null;
+            },
+            resetCacheCaption() {
+                return this.$tl("resetCacheCaption") ?? null;
             }
         },
         methods: {
@@ -142,6 +156,13 @@
                     this.$Api.Pulse.Version
                 ).then(response => {
                     this.version = response.data.version;
+                });
+            },
+            resetCache() {
+                this.$request(
+                    this.$AdminApi.CacheAdmin.ResetAllCache
+                ).then(response => {
+                    this.$successNotify(this.$tl('resetCacheSuccess'));
                 });
             }
         },
@@ -152,6 +173,6 @@
 
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
 </style>

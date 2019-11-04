@@ -1,6 +1,6 @@
 <template>
   <q-page class="activities-page">
-    <h2 class="q-title page-padding">
+    <h2 class="page-title page-padding">
       {{title}}
     </h2>
     <activities-list :componentName="componentName"/>
@@ -33,7 +33,7 @@
     }
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
   .activities-page {
 

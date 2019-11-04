@@ -20,8 +20,9 @@
             this.$options.components.Article = require('sun').Article;
         }
     }
+
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
 </style>

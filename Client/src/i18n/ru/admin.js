@@ -7,11 +7,11 @@ export default {
     addCategoryBtn: "Добавить категорию"
   },
   CategoryForm: {
-    name: "Имя категории (eng)",
+    name: "Имя (eng)",
     title: "Заголовок",
-    subTitle: "Короткое описание",
+    subTitle: "Подпись заголовка",
     icon: "Иконка",
-    header: "Шапка категории",
+    header: "Шапка",
     selectParent: "Родительская категория",
     deleteConfirm: "Вы уверены что хотите удалить категорию?\nВсё содержание категории также будут удалено.",
     parent: "Родитель: ",
@@ -240,7 +240,11 @@ export default {
     deletedElements: "Удалённое",
     deletedElementsCaption: "",
     //deletedElementsCaption: "Показывать удалённые материалы и коментарии",
-    version: "Версия SunEngine"
+    version: "Версия SunEngine",
+    resetCache: "Сбросить кеш",
+    resetCacheCaption: "",
+    //resetCacheCaption: "Сбросить весь кеш на сервере",
+    resetCacheSuccess: "Кеш сброшен успешно"
   },
   AdminPage: {
     title: "@:AdminPanel.title"

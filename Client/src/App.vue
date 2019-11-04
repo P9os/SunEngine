@@ -1,38 +1,36 @@
 <template>
-  <div id="q-app">
+  <div id="q-app" class="app">
     <Layout :key="rerenderKey" v-if="isInitialized"/>
 
-
-    <div v-else-if="!initializeError" class="loader">
+    <div v-else-if="!initializeError" class="app__loader">
       <div>
         <q-spinner-gears size="40px" class="q-mr-sm"/>
         {{$tl('loading')}}
       </div>
     </div>
 
-    <div v-else-if="initializeError" class="api-error">
+    <div v-else-if="initializeError" class="app__api-error">
       <p>
-        <img src="/statics/sad.svg" style="width:30vw;max-width:150px;">
+        <img class="app__img-sad" src="/statics/sad.svg">
       </p>
-      <p class="error-info">
+      <p class="app__error-info">
         {{$tl('canNotConnectApi')}}
       </p>
-      <q-btn icon="fa fa-sync-alt" color="grey" @click="refresh" flat no-caps :label="$t('Global.refresh')"></q-btn>
-
+      <a class="app__refresh-btn" href="#" @click="refresh">
+        <q-icon name="fa fa-sync-alt" class="q-mr-xs"/>
+        {{$t('Global.refresh')}}</a>
     </div>
   </div>
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapGetters} from 'vuex'
     import Vue from 'vue'
     import {Layout} from 'sun'
 
     var app;
 
-
     Vue.config.devtools = config.VueDevTools;
-
 
     export default {
         name: 'App',
@@ -43,7 +41,7 @@
             }
         },
         computed: {
-            ...mapState(['isInitialized', 'initializeError'])
+            ...mapGetters(['isInitialized', 'initializeError'])
         },
         methods: {
             rerender() {
@@ -52,7 +50,7 @@
             refresh() {
                 this.$store.state.initializedPromise = this.$store.dispatch('initStore');
                 this.$store.state.initializedPromise.then(_ =>
-                   this.$router.push(this.$router.currentRoute)
+                    this.$router.push(this.$router.currentRoute)
                 )
             }
         },
@@ -69,29 +67,45 @@
 
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
-  #q-app {
-    .api-error {
-      display: flex;
-      height: 100vh;
-      align-items: center;
-      align-content: center;
-      justify-content: center;
-      flex-direction: column;
-      font-size: 1.2rem;
-      color: grey;
-      font-weight: 400;
-    }
+  .app__api-error {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.2rem;
+    color: grey;
+    font-weight: 400;
+  }
 
-    .loader {
-      display: flex;
-      height: 100vh;
-      align-items: center;
-      align-content: center;
-      justify-content: center;
-      font-size: 1.4em;
-      color: #005d00;
+  .app__loader {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    font-size: 1.4em;
+    color: #005d00;
+  }
+
+  .app__img-sad {
+    width: 30vw;
+    max-width: 150px;
+  }
+
+  .app__refresh-btn {
+    font-size: 1.1rem;
+    color: grey;
+    padding: 10px 25px;
+    vertical-align: middle;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: $grey-4;
+      transition: 0.2s;
     }
   }
 

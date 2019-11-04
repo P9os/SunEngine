@@ -1,12 +1,14 @@
 <template>
   <span class="links-menu">
     <template v-if="menuItem.subMenuItems" v-for="(subItem,index) of menuItem.subMenuItems">
-      <router-link v-if="subItem.to" :to="subItem.to">{{subItem.title}}</router-link>
-      <a :href="subItem.externalUrl" target="_blank" v-else-if="subItem.externalUrl">{{subItem.title}}</a>
+      <router-link class="links-menu__link" v-if="subItem.to" :to="subItem.to">{{subItem.title}}</router-link>
+      <a class="links-menu__link" :href="subItem.externalUrl" target="_blank" v-else-if="subItem.externalUrl">{{subItem.title}}</a>
       <span v-else>{{subItem.title}}</span>
-       <slot v-if="index !== menuItem.subMenuItems.length-1">
+      <span class="links-menu__separator">
+        <slot v-if="index !== menuItem.subMenuItems.length-1">
 
-       </slot>
+        </slot>
+      </span>
     </template>
   </span>
 </template>
@@ -23,7 +25,7 @@
     }
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
   .links-menu {
     a:hover {

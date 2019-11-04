@@ -26,7 +26,7 @@
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props" :class="{current: props.row.isCurrent}">
+        <q-tr :props="props" :class="{sessions__current: props.row.isCurrent}">
           <q-td auto-width class="text-center">
             <q-checkbox v-if="!props.row.isCurrent" v-model="props.selected"/>
           </q-td>
@@ -110,12 +110,10 @@
     }
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
-  .sessions {
-    .current {
-      background-color: #efffec;
-    }
+  .sessions__current {
+    background-color: #efffec;
   }
 
 </style>

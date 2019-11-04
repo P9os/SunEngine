@@ -7,6 +7,9 @@ export default {
   name: 'SunEditor',
   extends: QEditor,
   mixins: [ValidateMixin],
+  props: {
+    bottomSlots: Boolean
+  },
   data: function () {
     return {
       filesNumber: 0,
@@ -77,19 +80,15 @@ export default {
         const formData = new FormData();
         formData.append('file', files[i]);
 
-        this.$store.dispatch('request',
-          {
-            url: '/UploadImages/UploadImage',
-            data: formData
-          })
-          .then(response => {
-            this.filesNames[i] = response.data.fileName;
-            this.oneFileDone();
-          })
-          .catch(error => {
-            console.log("error", error);
-            this.oneFileDone();
-          });
+        this.$request(this.$Api.UploadImages.UploadImage,
+          formData
+        ).then(response => {
+          this.filesNames[i] = response.data.fileName;
+          this.oneFileDone();
+        }).catch(error => {
+          console.log("error", error);
+          this.oneFileDone();
+        });
       }
     },
 
@@ -120,20 +119,25 @@ export default {
       [h(QSpinnerGears, {props: {size: '60px'}, class: 'text-grey-8'})]
     );
 
-    const error = h('div', {
-      staticClass: 'error',
-      key: 'q--slot-error'
-    }, this.computedErrorMessage);
+    let bottom = h('div', {staticClass: this.bottomSlots && 'sun-editor__bottom-slots'}, [createError.call(this)]);
 
-    const errorTransition = h('transition', {
-      staticClass: '',
-      props: {
-        name: 'q-transition--field-message',
+    return h('div', {staticClass: 'sun-editor relative-position'}, [editor, bottom, fileInput, loading]);
+
+    function createError() {
+      if (this.hasError) {
+        const errorDiv = h('div', {
+          staticClass: 'error',
+          key: 'q--slot-error'
+        }, this.computedErrorMessage);
+
+        return h('transition', {
+          staticClass: '',
+          props: {
+            name: 'q-transition--field-message',
+          }
+        }, [errorDiv]);
       }
-    }, [error]);
-
-    const errorMessage = this.hasError && errorTransition;
-
-    return h('div', {staticClass: 'relative-position sun-editor'}, [editor, errorMessage, fileInput, loading]);
+      return undefined;
+    }
   }
 }

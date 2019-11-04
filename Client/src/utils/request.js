@@ -20,12 +20,14 @@ apiAxios.interceptors.response.use(async rez => {
   return rez;
 }, async rez => {
   console.error(rez.response);
-  app.$q.notify({
-    message: app.$t('Global.apiError'),
-    timeout: 1800,
-    color: 'negative',
-    position: 'bottom-right'
-  });
+  if(!rez.response.data || !rez.response.data.errors  || rez.response.data.errors.some(x=>x.type === "System")) {
+    app.$q.notify({
+      message: app.$t('Global.apiError'),
+      timeout: 1800,
+      color: 'negative',
+      position: 'bottom-right'
+    });
+  }
   await checkTokens(rez.response);
   throw rez;
 });
@@ -35,12 +37,12 @@ export default async function(url, body, sendAsJson = false, skipLock = false) {
 
   if(body?.sendAsJson) {
     sendAsJson = body.sendAsJson;
-  //  delete body.sendAsJson;
+    delete body.sendAsJson;
   }
 
   if(body?.skipLock) {
     skipLock = body.skipLock;
-  //  delete body.skipLock;
+    delete body.skipLock;
   }
 
   if (config.Log.Requests)
@@ -51,8 +53,9 @@ export default async function(url, body, sendAsJson = false, skipLock = false) {
   const tokens = getTokens();
 
   if (skipLock) {
-    if (checkLocalTokensExpire())
+    if (checkLocalTokensExpire()) {
       headers['LongToken1'] = tokens.longToken;
+    }
 
     return makeRequest();
   }
@@ -115,9 +118,8 @@ export default async function(url, body, sendAsJson = false, skipLock = false) {
 function ConvertObjectToFormData(obj) {
   const formData = new FormData();
 
-  for (const key in obj)
-    if (obj.hasOwnProperty(key))
-      formData.append(key, obj[key]);
+  for (const [key,value] of Object.entries(obj))
+      formData.append(key, value);
 
   return formData;
 }

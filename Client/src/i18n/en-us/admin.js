@@ -7,11 +7,11 @@ export default {
     addCategoryBtn: "Add category"
   },
   CategoryForm: {
-    name: "Category name (eng)",
+    name: "Name (eng)",
     title: "Title",
-    subTitle: "Short description",
+    subTitle: "Subtitle",
     icon: "Icon",
-    header: "Category header",
+    header: "Header",
     selectParent: "Parent category",
     deleteConfirm: "You want to remove the category?",
     parent: "Parent: ",
@@ -233,7 +233,10 @@ export default {
     imagesCleanerCaption: "",
     deletedElements: "Deleted elements",
     deletedElementsCaption: "",
-    version: "SunEngine version"
+    version: "SunEngine version",
+    resetCache: "Reset cache",
+    resetCacheCaption: "",
+    resetCacheSuccess: "Cache succesfully reseted"
   },
   AdminPage: {
     title: "@:AdminPanel.title"

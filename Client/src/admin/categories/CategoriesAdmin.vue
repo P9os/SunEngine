@@ -1,17 +1,15 @@
 <template>
   <q-page class="categories-admin page-padding">
 
-    <div class="header-with-button">
-      <h2 class="q-title">
+    <div class="page-title-block">
+      <h2 class="page-title">
         {{$tl("title")}}
       </h2>
       <q-btn icon="fas fa-folder-plus" class="post-btn q-mr-lg" type="a"
-             :to="{name: 'CreateCategory', params: {parentCategoryId: 1}}" no-caps
-             :label="$tl('addCategoryBtn')"/>
-      <div class="clear"></div>
+             :to="{name: 'CreateCategory', params: {parentCategoryId: 1}}" no-caps :label="$tl('addCategoryBtn')"/>
     </div>
 
-    <CategoryItem v-if="root" @up="up" @down="down" @add="add" @edit="edit" :category="root" class="q-mt-lg"/>
+    <CategoryItem v-if="root" @up="up" @down="down" :category="root" class="q-mt-lg"/>
 
     <LoaderWait v-else/>
 
@@ -86,6 +84,6 @@
 
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 
 </style>

@@ -55,6 +55,22 @@ namespace SunEngine.Core.Services
             cypherSecrets.Add(key, securityKey);
         }
 
+<<<<<<< HEAD
+=======
+        public void AddCipherKey(string key, string securityKey)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(securityKey);
+
+            if (bytes.Length < 32)
+                throw new Exception("Cipher key have to be 32 bytes length");
+
+            if (bytes.Length > 32)
+                bytes = bytes[..32];
+
+            AddCipherKey(key, bytes);
+        }
+
+>>>>>>> master
         private static string ToUrlSafeBase64(byte[] input)
         {
             return Convert.ToBase64String(input).Replace("+", "-").Replace("/", "_");
