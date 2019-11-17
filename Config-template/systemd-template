@@ -1,0 +1,14 @@
+[Unit]
+Description=Sun Engine
+
+[Service]
+WorkingDirectory=//
+ExecStart=//
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
