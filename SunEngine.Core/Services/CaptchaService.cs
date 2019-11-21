@@ -23,12 +23,10 @@ namespace SunEngine.Core.Services
 
         private readonly Font font;
 
-
         private readonly ICryptService cryptService;
-
-
+        
         public CaptchaService(
-            IOptions<CaptchaOptions> captchaOptions,
+            IOptionsMonitor<CaptchaOptions> captchaOptions,
             ICryptService cryptService)
         {
             this.cryptService = cryptService;

@@ -17,19 +17,21 @@ import {AdminMenu} from 'sun'
 import {ComponentsAdmin} from 'sun'
 import {CreateComponent} from 'sun'
 import {EditComponent} from 'sun'
+import {SkinsAdmin} from 'sun'
+import {ConfigurationAdmin} from 'sun'
+import {AdminInformation} from 'sun'
 
 
-const AdminPage = wrapInPage("AdminPage", AdminMenu, null, "fas fa-cog");
-const AdminPanel = wrapInPanel("AdminPage", AdminMenu, null, {name: 'Admin'}, "fas fa-cog");
+const AdminPanel = wrapInPanel("AdminPanel", AdminMenu, null, undefined, "fas fa-cog");
 
 
 const routes = [
   {
-    name: 'Admin',
+    name: 'AdminInformation',
     path: '/admin',
     components: {
-      default: AdminPage,
-      navigation: null,
+      default: AdminInformation,
+      navigation: AdminPanel,
     }
   },
   {
@@ -98,6 +100,14 @@ const routes = [
         }
       },
       navigation: null
+    }
+  },
+  {
+    name: 'SkinsAdmin',
+    path: '/admin/Skins'.toLowerCase(),
+    components: {
+      default: SkinsAdmin,
+      navigation: AdminPanel
     }
   },
   {
@@ -181,6 +191,14 @@ const routes = [
     path: '/admin/DeletedElements'.toLowerCase(),
     components: {
       default: DeletedElements,
+      navigation: AdminPanel
+    }
+  },
+  {
+    name: 'ConfigurationAdmin',
+    path: '/admin/Configuration'.toLowerCase(),
+    components: {
+      default: ConfigurationAdmin,
       navigation: AdminPanel
     }
   },

@@ -6,17 +6,19 @@
 #
 #
 
-# if [apt --help > /dev/null]
-# then
-#     if [dotnet > /dev/null]
-#     then
+if [apt --help > /dev/null]
+then
+    if [dotnet > /dev/null]
+    then
 
-#     else
-#     {
-#         installDotnet()
-#     }
-#     fi
-# fi
+    else
+    {
+        installDotnet()
+    }
+    fi
+else
+echo "This OS not unaivalablek"
+fi
 
 installDotnet(){
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
@@ -37,7 +39,7 @@ installNpm(){
 }
 
 installQuasar(){
-    npm install -g @quasar/cli
+    sudo npm install -g @quasar/cli
 }
 
 installMariadb{

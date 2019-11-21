@@ -3,7 +3,7 @@ export default {
   // ——— categories ————————————————————————————————————
 
   CategoriesAdmin: {
-    title: "Admin page",
+    title: "Categories admin",
     addCategoryBtn: "Add category"
   },
   CategoryForm: {
@@ -20,7 +20,7 @@ export default {
     appendUrlTokenCb: "Add to URL",
     appendUrlTokenInfo: "(use only if you understand what it is)",
     isMaterialsContainerCb: "Contains materials",
-    materialsSubTitleInputType: "Material sub title input type",
+    isMaterialsSubTitleEditableCb: "Possibility to edit material sub title",
     isMaterialsNameEditableCb: "Possibility to edit material name (eng), only for admin",
     isCaching: "Caching",
     cachingPageCount: "Cache N pages",
@@ -92,7 +92,7 @@ export default {
     }
   },
   ComponentsAdmin: {
-    title: "Components",
+    title: "Components admin",
     addComponentBtn: "Add component"
   },
   CreateComponent: {
@@ -122,7 +122,11 @@ export default {
     title: "Edit menu item",
     saveBtn: "@:Global.btn.save",
     cancelBtn: "@:Global.btn.cancel",
-    successNotify: "Menu item successfully edited"
+    deleteBtn: "Delete menu item",
+    successNotify: "Menu item successfully edited",
+    deleteMsg: "Delete menu item?",
+    btnDeleteOk:  "@:Global.dialog.ok",
+    btnDeleteCancel: "@:Global.dialog.cancel",
   },
   MenuAdminItem: {},
   MenuItemForm: {
@@ -170,7 +174,7 @@ export default {
     }
   },
   MenuItemsAdmin: {
-    title: "Edit menu",
+    title: "Menu editor",
     addMenuItemBtn: "Add menu item",
     deleteMsg: "Delete menu item?",
     btnDeleteOk: "@:Global.dialog.ok",
@@ -200,7 +204,7 @@ export default {
     title: "Upload group config(json)",
     backupWarning: "Before uploading, you need to make a database backup.",
     saveToServerBtn: "Save",
-    getFromServer: "Load from server",
+    getFromServer: "Reload from server",
     getSuccessNotify: "Download completed successfully",
     saveSuccessNotify: "Group settings were updated successfully",
     textAreaLabel: "Json file of roles config"
@@ -215,21 +219,27 @@ export default {
   // ——— all ————————————————————————————————————
 
   AdminMenu: {
+    adminPage: "Information",
+    adminPageCaption: "",
     menuItems: "Menu",
     menuItemsCaption: "",
     categories: "Categories",
     categoriesCaption: "",
     components: "Components",
     componentsCaption: "",
+    skins: "Skins",
+    skinsCaption: "",
     rolesUsers: "Groups",
     rolesUsersCaption: "",
     rolesPermissions: "Permission",
     rolesPermissionsCaption: "",
     cacheSettings: "Cache settings",
     cacheSettingsCaption: "",
+    configuration: "Configuration",
+    configurationCaption: "",
     cypherSecrets: "Cypher keys",
     cypherSecretsCaption:"",
-    imagesCleaner: "Сleaner",
+    imagesCleaner: "Disk cleaner",
     imagesCleanerCaption: "",
     deletedElements: "Deleted elements",
     deletedElementsCaption: "",
@@ -262,6 +272,14 @@ export default {
       }
     }
   },
+  ConfigurationAdmin: {
+    title: "Site configuration",
+    successNotify: "Configuration values successfully saved",
+    resetSuccessNotify: "Configuration values reloaded from server",
+    resetBtn: "Reload from server",
+    cancelBtn: "@:Global.btn.cancel",
+    saveBtn: "@:Global.btn.save"
+  },
   CypherSecrets: {
     title: "Reset cypher keys"
   },
@@ -275,11 +293,29 @@ export default {
     successNotify: "Materials and comments successfully deleted"
   },
   ImagesCleaner: {
-    title: "ImagesCleaner",
+    title: "Disk cleaner",
     info: "Lost images not using on site",
-    clearBtn: "Clear",
-    refreshBtn: "Refresh",
+    working: "Clearing",
+    clearBtn: "Delete lost images",
+    refreshBtn: "Refresh lost images list",
     clearCount: "Cleared images: ",
-    emptyResult: "Folder is empty"
+    emptyResult: "Lost images not found"
+  },
+  SkinsAdmin: {
+    title: "Skins admin",
+    current: "Current",
+    info: "Skins collection and documentation to create own skin - ",
+    author: "Author: ",
+    contacts: "Contacts: ",
+    description: "Description: ",
+    link: "Link to source.",
+    version: "Version: ",
+    upload: "Upload skin",
+    uploadSuccessNotify: "Skin uploaded successfully",
+    deleteSuccessNotify: "Skin deleted successfully",
+    set: "Set",
+    deleteMsg: "Delete skin?",
+    btnDeleteOk: "@:Global.dialog.yes",
+    btnDeleteCancel: "@:Global.dialog.cancel"
   }
 }

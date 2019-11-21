@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using LinqToDB;
-using LinqToDB.Data;
 using Microsoft.Extensions.Options;
 using SunEngine.Core.Cache.CacheModels;
 using SunEngine.Core.Cache.Services;
@@ -59,7 +58,7 @@ namespace SunEngine.Core.Managers
     {
         protected readonly ITagsManager tagsManager;
         protected readonly SanitizerService sanitizerService;
-        protected readonly MaterialsOptions materialsOptions;
+        protected readonly  IOptionsMonitor<MaterialsOptions> materialsOptions;
         protected readonly ICategoriesCache categoriesCache;
 
         protected readonly Regex nameValidator =
@@ -70,11 +69,11 @@ namespace SunEngine.Core.Managers
             SanitizerService sanitizerService,
             ICategoriesCache categoriesCache,
             ITagsManager tagsManager,
-            IOptions<MaterialsOptions> materialsOptions) : base(db)
+            IOptionsMonitor<MaterialsOptions> materialsOptions) : base(db)
         {
             this.tagsManager = tagsManager;
             this.sanitizerService = sanitizerService;
-            this.materialsOptions = materialsOptions.Value;
+            this.materialsOptions = materialsOptions;
             this.categoriesCache = categoriesCache;
         }
 
@@ -103,15 +102,8 @@ namespace SunEngine.Core.Managers
             material.Text = sanitizerService.Sanitize(doc);
             material.SettingsJson = material.SettingsJson?.MakeJsonText();
 
-            switch (category.MaterialsSubTitleInputType)
-            {
-                case MaterialsSubTitleInputType.Manual:
+            if (category.IsMaterialsSubTitleEditable)
                     material.SubTitle = SimpleHtmlToText.ClearTags(sanitizerService.Sanitize(material.SubTitle));
-                    break;
-                case MaterialsSubTitleInputType.Auto:
-                    material.SubTitle = MakeSubTitle.Do(doc, materialsOptions.SubTitleLength);
-                    break;
-            }
 
 
             using (db.BeginTransaction())
@@ -135,19 +127,8 @@ namespace SunEngine.Core.Managers
             material.Text = sanitizerService.Sanitize(doc);
             material.SettingsJson = material.SettingsJson?.MakeJsonText();
 
-
-            switch (category.MaterialsSubTitleInputType)
-            {
-                case MaterialsSubTitleInputType.Manual:
-                    material.SubTitle = SimpleHtmlToText.ClearTags(sanitizerService.Sanitize(material.SubTitle));
-                    break;
-                case MaterialsSubTitleInputType.Auto:
-                    material.SubTitle = MakeSubTitle.Do(doc, materialsOptions.SubTitleLength);
-                    break;
-                default:
-                    material.SubTitle = null;
-                    break;
-            }
+            if (category.IsMaterialsSubTitleEditable)
+                material.SubTitle = SimpleHtmlToText.ClearTags(sanitizerService.Sanitize(material.SubTitle));
 
 
             await db.UpdateAsync(material);

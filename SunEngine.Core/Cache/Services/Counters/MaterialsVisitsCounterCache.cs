@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.IO.Enumeration;
 using System.Linq;
 using LinqToDB;
 using SunEngine.Core.DataBase;
@@ -91,6 +90,7 @@ namespace SunEngine.Core.Cache.Services.Counters
 
                 db.BeginTransaction();
 
+                db.DropTable<VisitsById>(throwExceptionIfNotExists: false);
                 using (TempTable<VisitsById> visitsByIdTempTable = new TempTable<VisitsById>(db, vss))
                 {
                     db.Materials.Where(x => visitsByIdTempTable.Any(y => y.Id == x.Id))

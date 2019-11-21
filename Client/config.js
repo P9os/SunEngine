@@ -4,16 +4,20 @@ const config = {
   SiteUrl: "http://localhost:5005",
   UploadedImages: 'http://localhost:5000/UploadImages',
   SiteName: 'SunEngine Demo',
+  Skin: 'http://localhost:5000/CurrentSkin/styles.css',  // Do not change last part "statics/skin/styles.css"
+  //Skin: 'http://localhost:5005/statics/CurrentSkin/styles.css',  // Do not change last part "statics/skin/styles.css"
 
   OpenExternalLinksAtNewTab: true,
+
+  UseExternalStyle: false,
 
   VueDevTools: true,      // Do not use on production
   VueAppInWindow: true,   // Do not use on production
 
   Log: {
-    InitExtended: true,
-    Requests: true,
-    MoveTo: true,
+    InitExtended: true,   // Do not use on production
+    Requests: true,       // Do not use on production
+    MoveTo: true,         // Do not use on production
   },
 
   Comments: {
@@ -66,4 +70,7 @@ else if(config.SiteUrl.startsWith("https://"))
   config.SiteSchema = "https://";
 else
   throw "SiteUrl in config.js have to start with 'http://' or 'https://'.";
+
+
+document.writeln(`<link href="${config.Skin}?skinver=111111" rel="stylesheet">`);
 

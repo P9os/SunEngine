@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
 using LinqToDB;
 using Microsoft.Extensions.Options;
 using SunEngine.Core.Cache.Services;
@@ -12,25 +10,18 @@ using SunEngine.Core.Errors;
 using SunEngine.Core.Models;
 using SunEngine.Core.Services;
 using SunEngine.Core.Utils;
-using SunEngine.Core.Utils.TextProcess;
 
 namespace SunEngine.Admin.Managers
 {
     public class CategoriesAdminManager : DbService
     {
         private readonly SanitizerService sanitizerService;
-        private readonly ICategoriesCache categoriesCache;
-        private readonly MaterialsOptions materialOptions;
 
         public CategoriesAdminManager(
             DataBaseConnection db,
-            IOptions<MaterialsOptions> materialOptions,
-            ICategoriesCache categoriesCache,
             SanitizerService sanitizerService) : base(db)
         {
             this.sanitizerService = sanitizerService;
-            this.categoriesCache = categoriesCache;
-            this.materialOptions = materialOptions.Value;
         }
 
 
@@ -95,7 +86,7 @@ namespace SunEngine.Admin.Managers
             category.SettingsJson = categoryUpdate.SettingsJson?.MakeJsonText();
             category.IsHidden = categoryUpdate.IsHidden;
             category.IsCacheContent = categoryUpdate.IsCacheContent;
-            category.MaterialsSubTitleInputType = categoryUpdate.MaterialsSubTitleInputType;
+            category.IsMaterialsSubTitleEditable = categoryUpdate.IsMaterialsSubTitleEditable;
             category.IsMaterialsNameEditable = categoryUpdate.IsMaterialsNameEditable;
             category.IsMaterialsContainer = categoryUpdate.IsMaterialsContainer;
             

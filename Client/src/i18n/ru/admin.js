@@ -20,7 +20,7 @@ export default {
     appendUrlTokenCb: "Добавлять в URL",
     appendUrlTokenInfo: "(использовать только если вы понимаете что это)",
     isMaterialsContainerCb: "Содержит материалы",
-    materialsSubTitleInputType: "Установка подписи заголовка материала",
+    isMaterialsSubTitleEditableCb: "Возможность редактирования подписи заголовка материала",
     isMaterialsNameEditableCb: "Возможность редактирования имени (eng) материала (только для админа)",
     isCaching: "Кэшировать содержимое",
     cachingPageCount: "Кэшировать N страниц",
@@ -92,7 +92,7 @@ export default {
     }
   },
   ComponentsAdmin: {
-    title: "Компоненты",
+    title: "Админка компонентов",
     addComponentBtn: "Добавить компонент",
   },
   CreateComponent: {
@@ -104,7 +104,7 @@ export default {
     title: "Изменить компонент",
     saveBtn: "@:Global.btn.save",
     cancelBtn: "@:Global.btn.cancel",
-    deleteBtn: "@:Global.btn.delete",
+    deleteBtn: "Удалить компонент",
     deleteMsg: "Удалить компонент?",
     btnDeleteOk: "@:Global.dialog.ok",
     btnDeleteCancel: "@:Global.dialog.cancel"
@@ -122,7 +122,11 @@ export default {
     title: "Редактировать пункт меню",
     saveBtn: "@:Global.btn.save",
     cancelBtn: "@:Global.btn.cancel",
-    successNotify: "Пункт меню успешно сохранён"
+    deleteBtn: "Удалить пункт меню",
+    successNotify: "Пункт меню успешно сохранён",
+    deleteMsg: "Удалить пункт меню?",
+    btnDeleteOk:  "@:Global.dialog.ok",
+    btnDeleteCancel: "@:Global.dialog.cancel",
   },
   MenuAdminItem: {},
   MenuItemForm: {
@@ -197,13 +201,12 @@ export default {
     roles: "Группы",
   },
   RolesPermissions: {
-    title: "Загрузка Json прав для групп",
-    backupWarning: "Перед загрузкой необходимо сделать backup базы.",
+    title: "Установка разрешений групп",
     saveToServerBtn: "Сохранить на сервер",
-    getFromServer: "Загрузить с сервера",
+    getFromServer: "Перезагрузить с сервера",
     getSuccessNotify: "Данные загружены с сервера",
     saveSuccessNotify: "Настройки групп успешно обновлены",
-    textAreaLabel: "Json файл конфигурации прав групп"
+    textAreaLabel: "Json конфигурация"
   },
   RoleUsers: {
     users: "Пользователи",
@@ -215,6 +218,9 @@ export default {
   // ——— all ————————————————————————————————————
 
   AdminMenu: {
+    adminPage: "Информация",
+    adminPageCaption: "",
+   // adminPageCaption: "Информация о сервере",
     menuItems: "Меню",
     menuItemsCaption: "",
     //menuItemsCaption: "Редактирование меню сайта",
@@ -223,18 +229,24 @@ export default {
     //categoriesCaption: "Редактирование разделов сайта",
     components: "Компоненты",
     componentsCaption: "",
-    rolesUsers: "Группы",
+    skins: "Темы оформления",
+    skinsCaption: "",
+    //skinsCaption: "Добавление, установка, удаление",
+    rolesUsers: "Группы пользователей",
     rolesUsersCaption: "",
     //rolesUsersCaption: "Пользователи по группам",
-    rolesPermissions: "Права групп",
+    rolesPermissions: "Разрешения групп",
     rolesPermissionsCaption: "",
     //rolesPermissionsCaption: "Добавление, редактирование, удаление групп и их прав",
     cacheSettings: "Кэширование",
     cacheSettingsCaption: "",
+    configuration: "Конфигурация",
+    configurationCaption: "",
+    //configurationCaption: "Конфигурация",
     //cacheSettingsCaption: "Способ кэширования на сайте",
     cypherSecrets: "Ключи шифрования",
     cypherSecretsCaption: "",
-    imagesCleaner: "Очистка",
+    imagesCleaner: "Очистка диска",
     imagesCleanerCaption: "",
     //imagesCleanerCaption: "Удалить неиспользуемые изображения",
     deletedElements: "Удалённое",
@@ -246,8 +258,19 @@ export default {
     //resetCacheCaption: "Сбросить весь кеш на сервере",
     resetCacheSuccess: "Кеш сброшен успешно"
   },
-  AdminPage: {
-    title: "@:AdminPanel.title"
+  AdminInformation: {
+    title: "Информация",
+    serverName: "Имя сервера",
+    serverVersion: "Версия сервера",
+    serverRepository: "Репозиторий сервера",
+    sunEngineVersion: "Версия SunEngine",
+    dotNetVersion: "Версия DotNet",
+    maintainer: "Хранитель сайта",
+    maintainerContacts: "Контакты хранителя",
+    description: "Описание",
+    sunEngineRepository: "Репозиторий SunEngine",
+    sunEngineSkinsRepository: "Репозиторий тем оформления",
+    additionalData: "Дополнительная информация"
   },
   AdminPanel: {
     title: "Админка"
@@ -270,6 +293,14 @@ export default {
       }
     }
   },
+  ConfigurationAdmin: {
+    title: "Конфигурация сайта",
+    successNotify: "Значения конфигурации успешно сохранены",
+    resetSuccessNotify: "Значения конфигурации перезагружены с сервера",
+    resetBtn: "Перезагрузить с сервера",
+    cancelBtn: "@:Global.btn.cancel",
+    saveBtn: "@:Global.btn.save"
+  },
   CypherSecrets: {
     title: "Сбросить ключи шифрования"
   },
@@ -283,11 +314,29 @@ export default {
     successNotify: "Материалы и коментарии успешно удалены"
   },
   ImagesCleaner: {
-    title: "Очистка изображений",
-    info: "Потерянные изображения, которые не используются на сайте",
-    clearBtn: "Очистить",
-    refreshBtn: "Обновить",
+    title: "Очистка диска",
+    info: "Потерянные изображения, которые были загружены, но не используются.",
+    working: "Очистка",
+    clearBtn: "Удалить потерянные изображения",
+    refreshBtn: "Обновить список",
     clearCount: "Очищено изображений: ",
-    emptyResult: "Каталог пуст"
+    emptyResult: "Потерянные изображения отсутсвуют"
+  },
+  SkinsAdmin: {
+    title: "Темы оформления",
+    current: "Текущая",
+    info: "Темы оформления и документация по созданию тем - ",
+    author: "Автор: ",
+    contacts: "Контакты: ",
+    description: "Описание: ",
+    link: "Ссылка на источник.",
+    version: "Версия: ",
+    upload: "Загрузить тему",
+    uploadSuccessNotify: "Тема успешно загружена",
+    deleteSuccessNotify: "Тема успешно удалён",
+    set: "Установить",
+    deleteMsg: "Удалить тему?",
+    btnDeleteOk: "@:Global.dialog.yes",
+    btnDeleteCancel: "@:Global.dialog.cancel"
   }
 }

@@ -1,6 +1,16 @@
 <template>
   <q-list class="admin-menu sun-second-menu" no-border>
 
+    <q-item exact :to="{name: 'AdminInformation'}">
+      <q-item-section avatar>
+        <q-icon name="fas fa-info"/>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ $tl("adminPage") }}</q-item-label>
+        <q-item-label v-if="adminPageCaption" caption>{{adminPageCaption}}</q-item-label>
+      </q-item-section>
+    </q-item>
+
     <q-item :to="{name: 'MenuItemsAdmin'}">
       <q-item-section avatar>
         <q-icon name="fas fa-bars"/>
@@ -31,9 +41,29 @@
       </q-item-section>
     </q-item>
 
+    <q-item :to="{name: 'ConfigurationAdmin'}">
+      <q-item-section avatar>
+        <q-icon name="fas fa-tools"/>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ $tl("configuration") }}</q-item-label>
+        <q-item-label v-if="configurationCaption" caption>{{configurationCaption}}</q-item-label>
+      </q-item-section>
+    </q-item>
+
+    <q-item :to="{name: 'SkinsAdmin'}">
+      <q-item-section avatar>
+        <q-icon name="fas fa-user-astronaut"/>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ $tl("skins") }}</q-item-label>
+        <q-item-label v-if="skinsCaption" caption>{{skinsCaption}}</q-item-label>
+      </q-item-section>
+    </q-item>
+
     <q-item :to="{name: 'RolesPage'}">
       <q-item-section avatar>
-        <q-icon name="fas fa-users"/>
+        <q-icon name="fas fa-user-friends"/>
       </q-item-section>
       <q-item-section>
         <q-item-label>{{ $tl("rolesUsers") }}</q-item-label>
@@ -43,7 +73,7 @@
 
     <q-item :to="{name: 'RolesPermissions'}">
       <q-item-section avatar>
-        <q-icon name="fas fa-users-cog"/>
+        <q-icon name="fas fa-user-shield"/>
       </q-item-section>
       <q-item-section>
         <q-item-label>{{ $tl("rolesPermissions") }}</q-item-label>
@@ -101,10 +131,6 @@
       </q-item-section>
     </q-item>
 
-    <div class="admin-menu__version text-grey-7 q-mt-xl text-center" v-if="version">
-      {{$tl("version")}}: {{version}}
-    </div>
-
   </q-list>
 
 </template>
@@ -113,11 +139,6 @@
 
     export default {
         name: 'AdminMenu',
-        data() {
-            return {
-                version: null
-            }
-        },
         computed: {
             menuItemsCaption() {
                 return this.$tl("menuItemsCaption") ?? null;
@@ -128,6 +149,9 @@
             componentsCaption() {
                 return this.$tl("cypherSecretsCaption") ?? null;
             },
+            skinsCaption() {
+                return this.$tl("skinsCaption") ?? null;
+            },
             rolesUsersCaption() {
                 return this.$tl("rolesUsersCaption") ?? null;
             },
@@ -136,6 +160,9 @@
             },
             cacheSettingsCaption() {
                 return this.$tl("cacheSettingsCaption") ?? null;
+            },
+            configurationCaption() {
+                return this.$tl("configurationCaption") ?? null;
             },
             imagesCleanerCaption() {
                 return this.$tl("imagesCleanerCaption") ?? null;
@@ -151,13 +178,6 @@
             }
         },
         methods: {
-            getVersion() {
-                this.$request(
-                    this.$Api.Pulse.Version
-                ).then(response => {
-                    this.version = response.data.version;
-                });
-            },
             resetCache() {
                 this.$request(
                     this.$AdminApi.CacheAdmin.ResetAllCache
@@ -165,9 +185,6 @@
                     this.$successNotify(this.$tl('resetCacheSuccess'));
                 });
             }
-        },
-        created() {
-            this.getVersion();
         }
     }
 

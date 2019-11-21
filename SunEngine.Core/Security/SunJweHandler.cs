@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -28,7 +29,6 @@ namespace SunEngine.Core.Security
     public class SunJweHandler : AuthenticationHandler<SunJweOptions>
     {
         private readonly IRolesCache rolesCache;
-        private readonly JweOptions jweOptions;
         private readonly JweService jweService;
         private readonly SunUserManager userManager;
         private readonly JweBlackListService jweBlackListService;
@@ -40,13 +40,11 @@ namespace SunEngine.Core.Security
             ISystemClock clock,
             IRolesCache rolesCache,
             JweService jweService,
-            IOptions<JweOptions> jweOptions,
             JweBlackListService jweBlackListService,
             SunUserManager userManager) : base(options, logger, encoder, clock)
         {
             this.rolesCache = rolesCache;
             this.jweService = jweService;
-            this.jweOptions = jweOptions.Value;
             this.userManager = userManager;
             this.jweBlackListService = jweBlackListService;
         }
@@ -54,6 +52,9 @@ namespace SunEngine.Core.Security
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            if (Request.Method == HttpMethods.Get) // Allow any get requests
+                return AuthenticateResult.NoResult();
+
             try
             {
                 var cookie = Request.Cookies[TokenClaimNames.LongToken2CoockiName];
@@ -141,8 +142,10 @@ namespace SunEngine.Core.Security
 
                     var claimsPrincipal = jweService.ReadShortToken(jwtShortToken);
 
-                    string longToken2Ran_1 = jwtLongToken2.Claims.First(x => x.Type == TokenClaimNames.LongToken2Ran).Value;
-                    string longToken2Ran_2 = claimsPrincipal.Claims.First(x => x.Type == TokenClaimNames.LongToken2Ran).Value;
+                    string longToken2Ran_1 =
+                        jwtLongToken2.Claims.First(x => x.Type == TokenClaimNames.LongToken2Ran).Value;
+                    string longToken2Ran_2 = claimsPrincipal.Claims.First(x => x.Type == TokenClaimNames.LongToken2Ran)
+                        .Value;
 
                     long sessionId =
                         long.Parse(jwtLongToken2.Claims.First(x => x.Type == TokenClaimNames.SessionId).Value);

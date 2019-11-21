@@ -8,7 +8,6 @@ using SunEngine.Core.Configuration.Options;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Models;
 using SunEngine.Core.Services;
-using SunEngine.Core.Utils.TextProcess;
 
 namespace SunEngine.Core.Managers
 {
@@ -23,18 +22,18 @@ namespace SunEngine.Core.Managers
     {
         protected readonly IEmailSenderService emailSenderService;
         protected readonly SanitizerService sanitizerService;
-        protected readonly GlobalOptions globalOptions;
+        protected readonly  IOptionsMonitor<GlobalOptions> globalOptions;
 
         public ProfileManager(
             DataBaseConnection db,
             IEmailSenderService emailSenderService,
-            IOptions<GlobalOptions> globalOptions,
+            IOptionsMonitor<GlobalOptions> globalOptions,
             SanitizerService sanitizerService
         ) : base(db)
         {
             this.emailSenderService = emailSenderService;
             this.sanitizerService = sanitizerService;
-            this.globalOptions = globalOptions.Value;
+            this.globalOptions = globalOptions;
         }
 
 
@@ -45,8 +44,8 @@ namespace SunEngine.Core.Managers
                 "private-message.html",
                 new Dictionary<string, string>
                 {
-                    {"[siteName]", globalOptions.SiteName},
-                    {"[url]", globalOptions.SiteUrl.AppendPathSegment("user/" + from.Link)},
+                    {"[siteName]", globalOptions.CurrentValue.SiteName},
+                    {"[url]", globalOptions.CurrentValue.SiteUrl.AppendPathSegment("user/" + from.Link)},
                     {"[userName]", from.UserName},
                     {"[message]", sanitizerService.Sanitize(text)}
                 }

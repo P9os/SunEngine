@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using SunEngine.Admin;
+using SunEngine.Core.Configuration;
 using SunEngine.Core.Configuration.AddServices;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
@@ -18,6 +19,7 @@ namespace SunEngine.Cli
 {
     public class Startup
     {
+        
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -43,19 +45,19 @@ namespace SunEngine.Cli
 
             services.AddOptions(Configuration);
 
-            DataBaseFactory dataBaseFactory = services.AddDatabase(Configuration); // TODO make internal def
+            services.AddDatabase(Configuration, out var dataBaseFactory);
 
             services.AddDbOptions(dataBaseFactory);
-            
+
             services.AddCaches(dataBaseFactory);
 
             services.AddCachePolicy();
 
             services.AddIdentity(dataBaseFactory);
 
-            AddAuthenticationExtensions.AddAuthentication(services);
+            services.AddSunAuthentication();
 
-            AddAuthorizationExtensions.AddAuthorization(services);
+            services.AddSunAuthorization();
 
             services.AddManagers();
 
@@ -70,13 +72,17 @@ namespace SunEngine.Cli
             services.AddCiphers(dataBaseFactory);
 
             services.AddCounters();
-            
+
             services.AddJobs();
 
             services.AddSingleton<CaptchaService>();
             services.AddSanitizer();
-            
+
             services.AddTransient<IEmailSenderService, EmailSenderService>();
+
+            services.AddSingleton<IPathService, PathService>();
+
+            services.AddSingleton((IConfigurationRoot)Configuration);
             
             services.AddMvcCore(options =>
                 {
@@ -88,7 +94,8 @@ namespace SunEngine.Cli
                 {
                     options.SerializerSettings.ContractResolver = SunJsonContractResolver.Instance;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                });;
+                });
+            ;
         }
 
 

@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SunEngine.Admin.Managers;
 using SunEngine.Admin.Presenters;
 using SunEngine.Admin.Services;
+using SunEngine.Core.Configuration;
 
 namespace SunEngine.Admin
 {
@@ -11,17 +12,21 @@ namespace SunEngine.Admin
         {
             services.AddScoped<CacheSettingsManager>();
             services.AddScoped<CategoriesAdminManager>();
-            services.AddScoped<RolesPermissionsAdminService>();
+            services.AddScoped<IConfigurationManager,ConfigurationManager>();
+            services.AddScoped<IMenuAdminManager, MenuAdminManager>();
+            services.AddScoped<IComponentsAdminManager, ComponentsAdminManager>();
+            
             services.AddScoped<IUserRolesAdminPresenter, UserRolesAdminPresenter>();
             services.AddScoped<ICategoriesAdminPresenter, CategoriesAdminPresenter>();
             services.AddScoped<CacheSettingsPresentor>();
             services.AddScoped<IUserRolesAdminPresenter, UserRolesAdminPresenter>();
             services.AddScoped<IMenuAdminPresenter, MenuAdminPresenter>();
-            services.AddScoped<IMenuAdminManager, MenuAdminManager>();
             services.AddScoped<IComponentsAdminPresenter, ComponentsAdminPresenter>();
-            services.AddScoped<IComponentsAdminManager, ComponentsAdminManager>();
+            services.AddScoped<IConfigurationPresenter, ConfigurationPresenter>();
+
+            services.AddScoped<RolesPermissionsAdminService>();
             services.AddScoped<ImageCleanerAdminService>();
-            services.AddScoped<ICleanerManager, CleanerManager>();
+            services.AddScoped<SkinsAdminService>();
         }
     }
 }

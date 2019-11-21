@@ -7,10 +7,14 @@
       {{$tl("info")}}
     </q-banner>
 
-    <div class="images-cleaner__btn-block q-gutter-md q-mb-xl">
-      <q-btn icon="fas fa-trash" class="send-btn" :disable="!images" @click="clear()" no-caps
-             :label="$tl('clearBtn')"/>
-
+    <div class="images-cleaner__btn-block q-gutter-md flex q-mb-xl">
+      <q-btn icon="fas fa-trash" class="send-btn"  :loading="loading" :disable="!images" @click="clear()" no-caps
+             :label="$tl('clearBtn')">
+        <LoaderSent  slot="loading">
+          {{$tl("working")}}
+        </LoaderSent>
+      </q-btn>
+      <div class="grow"></div>
       <q-btn no-caps class="refresh-btn q-ml" color="info" icon="fas fa-sync-alt" @click="reloadImages()"
              :label="$tl('refreshBtn')"/>
     </div>
@@ -18,6 +22,9 @@
     <div v-if="images" class="images-cleaner__img-block img flex row q-col-gutter-sm">
       <img v-for="image in images" :src="$imagePath(image)" height="80" width="80" class="images-cleaner__clean-img"/>
     </div>
+    <q-banner rounded class="images-cleaner__empty-result bg-grey-3" v-else>
+      {{$tl("emptyResult")}}
+    </q-banner>
   </q-page>
 </template>
 
@@ -31,11 +38,13 @@
         data() {
             return {
                 imagesDeleted: null,
-                images: null
+                images: null,
+                loading: false
             }
         },
         methods: {
             clear() {
+                this.loading = true;
                 this.$request(this.$AdminApi.ImagesCleaner.DeleteImages
                 ).then(response => {
                     this.imagesDeleted = response.data.imagesDeleted;
@@ -43,6 +52,8 @@
                     this.loadImages();
                 }).catch(error => {
                     this.$errorNotify(error)
+                }).finally(_ => {
+                    this.loading = false;
                 });
             },
 
@@ -62,6 +73,9 @@
                 this.images ? this.$successNotify() : this.$successNotify(this.$tl('emptyResult'));
             }
         },
+        beforeCreate() {
+            this.$options.components.LoaderSent = require('sun').LoaderSent;
+        },
         created() {
             this.title = this.$tl('title');
             this.loadImages();
@@ -76,5 +90,10 @@
     width: 100px;
     height: 110px;
   }
+
+  /*.images-cleaner__send-btn {
+    background-color: $info;
+    color: white;
+  }*/
 
 </style>

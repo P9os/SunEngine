@@ -21,14 +21,14 @@ namespace SunEngine.Core.Services
 
     public class EmailSenderService : IEmailSenderService
     {
-        private readonly EmailSenderOptions options;
+        private readonly IOptionsMonitor<EmailSenderOptions> emailSenderOptions;
         private readonly IMailTemplatesCache mailTemplatesCache;
 
         public EmailSenderService(
-            IOptions<EmailSenderOptions> optionsAccessor,
+            IOptionsMonitor<EmailSenderOptions> emailSenderOptions,
             IMailTemplatesCache mailTemplatesCache)
         {
-            options = optionsAccessor.Value;
+            this.emailSenderOptions = emailSenderOptions;
             this.mailTemplatesCache = mailTemplatesCache;
         }
 
@@ -47,7 +47,7 @@ namespace SunEngine.Core.Services
         {
             MailMessage mailMessage = new MailMessage
             {
-                From = new MailAddress(options.EmailFromAddress, options.EmailFromName),
+                From = new MailAddress(emailSenderOptions.CurrentValue.EmailFromAddress, emailSenderOptions.CurrentValue.EmailFromName),
                 Body = textMessage,
                 Subject = subject,
                 BodyEncoding = Encoding.UTF8,
@@ -61,16 +61,14 @@ namespace SunEngine.Core.Services
                 htmlView.ContentType = new ContentType("text/html");
                 mailMessage.AlternateViews.Add(htmlView);
             }
-            
-            using (SmtpClient client = new SmtpClient(options.Host, options.Port)
+
+            using SmtpClient client = new SmtpClient(emailSenderOptions.CurrentValue.Host, emailSenderOptions.CurrentValue.Port)
             {
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(options.Login, options.Password),
-                EnableSsl = options.UseSSL
-            })
-            {
-                await client.SendMailAsync(mailMessage);
-            }
+                Credentials = new NetworkCredential(emailSenderOptions.CurrentValue.Login, emailSenderOptions.CurrentValue.Password),
+                EnableSsl = emailSenderOptions.CurrentValue.UseSSL
+            };
+            await client.SendMailAsync(mailMessage);
         }
     }
 }

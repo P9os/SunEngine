@@ -15,7 +15,7 @@ namespace SunEngine.Core.Configuration.AddServices
         /// <summary>
         /// Add Singleton cache services
         /// </summary>
-        public static void AddCaches(this IServiceCollection services, DataBaseFactory dataBaseFactory)
+        public static void AddCaches(this IServiceCollection services, IDataBaseFactory dataBaseFactory)
         {
             services.AddSingleton<IRolesCache>(new RolesCache(dataBaseFactory));
 
@@ -39,11 +39,11 @@ namespace SunEngine.Core.Configuration.AddServices
 
         private static ICachePolicy GetCachePolicy(IServiceProvider provider)
         {
-            var cacheOptions = provider.GetRequiredService<IOptions<CacheOptions>>();
+            var cacheOptions = provider.GetRequiredService<IOptionsMonitor<CacheOptions>>();
             if (cacheOptions == null)
                 throw new NotFoundServiceException("Cache policy must be added after loading settings from database");
 
-            switch (cacheOptions.Value.CurrentCachePolicy)
+            switch (cacheOptions.CurrentValue.CurrentCachePolicy)
             {
                 case CachePolicy.AlwaysPolicy:
                     return new AlwaysCachePolicy();

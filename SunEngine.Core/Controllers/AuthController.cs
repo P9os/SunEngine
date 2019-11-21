@@ -1,9 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
-using LinqToDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -23,7 +21,7 @@ namespace SunEngine.Core.Controllers
     {
         private readonly JweService jweService;
         private readonly DataBaseConnection db;
-        private readonly GlobalOptions globalOptions;
+        private readonly  IOptionsMonitor<GlobalOptions> globalOptions;
         private readonly IAuthManager authManager;
 
 
@@ -31,10 +29,10 @@ namespace SunEngine.Core.Controllers
             DataBaseConnection db,
             JweService jweService,
             IAuthManager authManager,
-            IOptions<GlobalOptions> globalOptions,
+            IOptionsMonitor<GlobalOptions> globalOptions,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            this.globalOptions = globalOptions.Value;
+            this.globalOptions = globalOptions;
             this.db = db;
             this.jweService = jweService;
             this.authManager = authManager;
@@ -94,7 +92,7 @@ namespace SunEngine.Core.Controllers
                         await userManager.AddToRoleAsync(user, RoleNames.Registered);
 
                         transaction.Complete();
-                        return Redirect(Flurl.Url.Combine(globalOptions.SiteUrl, "Auth/RegisterEmailResult?result=ok")
+                        return Redirect(Flurl.Url.Combine(globalOptions.CurrentValue.SiteUrl, "Auth/RegisterEmailResult?result=ok")
                             .ToLower());
                     }
                 }
@@ -104,7 +102,7 @@ namespace SunEngine.Core.Controllers
                 }
             }
 
-            return Redirect(Flurl.Url.Combine(globalOptions.SiteUrl,
+            return Redirect(Flurl.Url.Combine(globalOptions.CurrentValue.SiteUrl,
                 "Auth/RegisterEmailResult?result=error".ToLower()));
         }
     }

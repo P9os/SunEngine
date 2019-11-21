@@ -3,15 +3,15 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <Version>1.15.5</Version>
-        <PackageVersion>1.15.5</PackageVersion>
+        <Version>1.18.1</Version>
+        <PackageVersion>1.18.1</PackageVersion>
         <Title>SunEngine</Title>
         <Authors>Dimitrij Polianin</Authors>
         <Description>Site engine with blog, forum and articles functionalities on Asp.Net Core and Vue.Js.</Description>
-        <Copyright>Dmitrii Polianin</Copyright>
+        <Copyright>Dimitrij Polianin</Copyright>
         <PackageProjectUrl>https://github.com/Dmitrij-Polyanin/SunEngine</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/Dmitrij-Polyanin/SunEngine/blob/master/LICENSE.md</PackageLicenseUrl>
-        <PackageTags>forum, blog, site, cms, web engine, web, engine, asp.net core, spa, vuejs, vue, quasar</PackageTags>
+        <PackageTags>forum, blog, site, cms, web engine, asp.net core, spa, vuejs, vue, quasar</PackageTags>
         <AssemblyName>SunEngine</AssemblyName>
     </PropertyGroup>
 
@@ -35,11 +35,14 @@
           <CopyToPublishDirectory>Always</CopyToPublishDirectory>
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="MailTemplates\*">
+        <Content Update="AllSkins\**">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="MailTemplates\*">
             <CopyToPublishDirectory>None</CopyToPublishDirectory>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Resources\gunnyrewritten.ttf" />
         <Content Include="Resources\gunnyrewritten.ttf">
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -48,13 +51,16 @@
             <CopyToPublishDirectory>None</CopyToPublishDirectory>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Update="wwwroot\UploadImages\default-avatar-blue.svg">
+        <Content Update="wwwroot\UploadImages\default-avatar.svg">
           <CopyToPublishDirectory>Always</CopyToPublishDirectory>
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Update="wwwroot\CurrentSkin\**">
+            <CopyToPublishDirectory>None</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
-
-
+    
     <ItemGroup>
       <ProjectReference Include="..\SunEngine.Admin\SunEngine.Admin.csproj" />
       <ProjectReference Include="..\SunEngine.Core\SunEngine.Core.csproj" />
@@ -63,17 +69,8 @@
     </ItemGroup>
 
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Config-template\Categories\Articles.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Categories\Articles1.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Categories\Blog.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Categories\Forum1.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Categories\Forum2.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Materials\info1.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Menu\Main.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Materials\inline1.json" />
-      <_ContentIncludedByDefault Remove="Config-template\Categories\SiteTexts.json" />
-    </ItemGroup>
+
+    
     
    
     <PropertyGroup>

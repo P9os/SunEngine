@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -20,17 +21,19 @@ namespace SunEngine.DataSeed
     {
         private const string DataBaseConnectionFileName = "DataBaseConnection.json";
         public const string SeedCommand = "seed";
+        private const string InitDir = "Init";
 
-
+        private readonly string initDirPath;
         private readonly string providerName;
         private readonly string connectionString;
         private readonly string configDirectoryPath;
-        
+
 
         public Main(string configDirectoryPath = "Config")
         {
-            this.configDirectoryPath = configDirectoryPath;
-            string dbSettingsFile = Path.GetFullPath(Path.Combine(configDirectoryPath, DataBaseConnectionFileName));
+            this.configDirectoryPath = Path.GetFullPath(configDirectoryPath);
+            initDirPath = Path.GetFullPath(Path.Combine(configDirectoryPath, InitDir));
+            string dbSettingsFile = Path.Combine(this.configDirectoryPath, DataBaseConnectionFileName);
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(dbSettingsFile, false, true)
                 .Build();
@@ -46,27 +49,15 @@ namespace SunEngine.DataSeed
         /// </summary>
         public void SeedInitialize()
         {
-            using (var db = new DataBaseConnection(providerName, connectionString))
-            {
-                var dataContainer = new InitialSeeder(configDirectoryPath).Seed();
-                var databaseSeeder = new DataBaseSeeder(db, dataContainer);
+            CheckDbConnectionAndExitIfFailed();
+            
+            using var db = new DataBaseConnection(providerName, connectionString);
 
-                try
-                {
-                    databaseSeeder.SeedInitial();
-                }
-                catch (DbException e)
-                {
-                    throw new SunDataBaseException(
-                        "Exception happened in data seed process. " +
-                        "Check that last migrations were done('migrate' argument).", e);
-                }
-                catch (SocketException e)
-                {
-                    throw new SunDataBaseException("The connection could not be made. " +
-                                                             "Check the database you are trying to connect exists.", e);
-                }
-            }
+            var dataContainer = new InitialSeeder(initDirPath).Seed();
+            var databaseSeeder = new DataBaseSeeder(db, dataContainer);
+
+
+            databaseSeeder.SeedInitial();
         }
 
         /// <summary>
@@ -74,30 +65,16 @@ namespace SunEngine.DataSeed
         /// </summary>
         public void SeedAddTestData(IList<string> catTokens, bool titleAppendCategoryName = false)
         {
+            CheckDbConnectionAndExitIfFailed();
+            
             const string seedCommandDots = SeedCommand + ":";
             if (catTokens.Contains(SeedCommand))
                 catTokens[catTokens.IndexOf(SeedCommand)] = seedCommandDots + Category.RootName;
             catTokens = catTokens.Select(x => x.Substring(seedCommandDots.Length)).ToList();
 
-            using (DataBaseConnection db = new DataBaseConnection(providerName, connectionString))
-            {
-                try
-                {
-                    SeedTestData(db);
-                }
-                catch (DbException e)
-                {
-                    throw new SunDataBaseException(
-                        "Exception happened in data seed process. " +
-                        "Check that last migrations were done('migrate' argument) and system initialized ('init' argument).",
-                        e);
-                }
-                catch (SocketException e)
-                {
-                    throw new SunDataBaseException("The connection could not be made. " +
-                                                             "Check the database you are trying to connect exists.", e);
-                }
-            }
+            using DataBaseConnection db = new DataBaseConnection(providerName, connectionString);
+
+            SeedTestData(db);
 
 
             void SeedTestData(DataBaseConnection db)
@@ -138,34 +115,61 @@ namespace SunEngine.DataSeed
             }
         }
 
-
-        /// <summary>
-        /// Check is Database exists and connection working
-        /// </summary>
-        public bool CheckConnection()
+        protected void CheckDbConnectionAndExitIfFailed()
         {
-            using (var db = new DataBaseConnection(providerName, connectionString))
+            if (CheckDataBaseConnection(out Exception e))
+                return;
+            
+            Console.WriteLine();
+            Console.WriteLine(e);
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Connection error.\nCheck if database exists and connection string correct.");
+            Console.ResetColor();
+            Console.WriteLine();
+            Environment.Exit(1);
+        }
+
+        public void PrintDbConnectionAvailability()
+        {
+            if (CheckDataBaseConnection(out Exception exception))
             {
-                try
-                {
-                    db.Connection.Open();
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("Database is available.");
-                    Console.ResetColor();
-                    return true;
-                }
-                catch (Exception exception)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Database is unavailable.");
-                    Console.ResetColor();
-                    Console.WriteLine(exception);
-                    return false;
-                }
-                finally
-                {
-                    db.Connection.Close();
-                }
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("Database is available.");
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine(exception);
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Database is unavailable.");
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+        }
+
+
+        protected bool CheckDataBaseConnection(out Exception exception)
+        {
+            exception = null;
+            try
+            {
+                using var db = new DataBaseConnection(providerName, connectionString);
+                using var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT 100";
+                int num = (int) cmd.ExecuteScalar();
+            
+                return true;
+            }
+            catch (Exception e)
+            {
+                exception = e;
+                return false;
             }
         }
     }
