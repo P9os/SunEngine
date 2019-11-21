@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using SunEngine.Core.Errors.Exceptions;
 using SunEngine.Core.Utils;
 
 namespace SunEngine.Core.Errors
@@ -20,12 +21,9 @@ namespace SunEngine.Core.Errors
             {
                 case null:
                     return;
-                case SunViewException sunViewException:
-                    await context.Response.WriteAsync(SunJson.Serialize(sunViewException.ErrorView));
-                    break;
                 default:
-                    ErrorView errorView = ErrorView.ServerError(exceptionHandlerPathFeature.Error);
-                    await context.Response.WriteAsync(SunJson.Serialize(errorView));
+                    var error = Errors.ServerError(exceptionHandlerPathFeature.Error);
+                    await context.Response.WriteAsync(SunJson.Serialize(error));
                     break;
             }
         }

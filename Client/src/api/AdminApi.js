@@ -11,6 +11,7 @@ export default {
     ChangeCachePolicy: '/Admin/AdminCacheSettings/ChangeCachePolicy',
   },
   UserRolesAdmin: {
+    GetRoleUsers:  '/Admin/UserRolesAdmin/GetRoleUsers',
     GetUserRoles: '/Admin/UserRolesAdmin/GetUserRoles',
     RemoveUserFromRole: '/Admin/UserRolesAdmin/RemoveUserFromRole',
     AddUserToRole: '/Admin/UserRolesAdmin/AddUserToRole',
@@ -59,7 +60,7 @@ export default {
   ConfigurationAdmin: {
     UploadConfiguration: '/Admin/ConfigurationAdmin/UploadConfiguration',
     LoadConfiguration: '/Admin/ConfigurationAdmin/LoadConfiguration',
-    GetEnums: '/Admin/ConfigurationAdmin/GetEnums'
+    GetEnums: '/Admin/ConfigurationAdmin/GetEnums',
   },
   ServerInfoAdmin: {
     Version: '/Admin/ServerInfoAdmin/Version',

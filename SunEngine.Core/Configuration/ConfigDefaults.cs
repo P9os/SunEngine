@@ -5,27 +5,32 @@ namespace SunEngine.Core.Configuration
 {
     public static class ConfigDefaults
     {
-        public enum BBB1
+        public enum Test
         {
-            Hi1,
-            Hi2,
-            Hi3
+            TestValue1,
+            TestValue2,
+            TestValue3
         }
         
         public static readonly Dictionary<string, object> ConfigurationItems = new Dictionary<string, object>()
         {
-            ["AAA:Test1"] = (LongString) "Test data 1",
-            ["AAA:Test2"] = (LongString) string.Join(" ", Enumerable.Repeat("test data", 30)),
+            ["Test:Test1"] = Test.TestValue2,
             
-            ["BBB:Enum1"] = BBB1.Hi2,
-            ["BBB:Enum2"] = BBB1.Hi3,
-
+            ["Sanitizer:AllowedTags"] = (LongString)"a,b,strong,i,em,blockquote,ol,li,ul,ol,p,div,br,video,audio,source,span,img,code,pre,font,h3,h4,h5,h6",
+            ["Sanitizer:AllowedAttributes"] = (LongString)"style,src,href,controls,autoplay,loop,alt,width,height,target,frameborder,allowfullscreen,download,controlsList,size",
+            ["Sanitizer:AllowedClasses"] = (LongString)"float,margin,indent,padding,color,text-align,text-decoration,font-size,width,height,max-width",
+            ["Sanitizer:AllowedCssProperties"] = (LongString)"float,margin,indent,padding,color,text-align,text-decoration,font-size,width,height,max-width",
+            ["Sanitizer:AllowedVideoDomains"] = (LongString)"https://www.youtube.com/,http://www.youtube.com/,https://youtube.com/,http://youtube.com/,https://youtu.be/,http://youtu.be/,//youtube.com/,//youtu.be/,//www.youtube.com/,//www.youtu.be/,https://vk.com/,http://vk.com/,//vk.com/,https://player.vimeo.com,http://player.vimeo.com,//player.vimeo.com",
+            ["Sanitizer:AllowedImageDomains"] = (LongString)"",
+            
             ["Global:SiteName"] = "SunEngine Demo",
 
             ["Dev:ShowExceptions"] = false,
 
-            ["Images:MaxWidthPixels"] = 1200,
-            ["Images:MaxHeightPixels"] = 800,
+            ["Images:MaxImageWidth"] = 3600,
+            ["Images:MaxImageHeight"] = 2025,
+            ["Images:ResizeMaxWidthPixels"] = 1200,
+            ["Images:ResizeMaxHeightPixels"] = 800,
             ["Images:PhotoMaxWidthPixels"] = 500,
             ["Images:PhotoMaxHeightPixels"] = 500,
             ["Images:AvatarSizePixels"] = 300,
@@ -68,6 +73,9 @@ namespace SunEngine.Core.Configuration
             ["Email:Password"] = "password",
             ["Email:EmailFromName"] = "SunEngine Demo",
             ["Email:EmailFromAddress"] = "SunEngine@demo.com",
+            
+            ["FileLoading:MaxArchiveSize"] = 20 * 1024,
+            ["FileLoading:MaxExtractArchiveSize"] = 60 * 1024,
         };
     }
 

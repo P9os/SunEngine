@@ -11,6 +11,7 @@ using SunEngine.Core.Configuration.Options;
 using SunEngine.Core.Controllers;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
+using SunEngine.Core.Errors.Exceptions;
 using SunEngine.Core.Models;
 using SunEngine.Core.Security;
 using SunEngine.Core.Services;
@@ -30,7 +31,7 @@ namespace SunEngine.Core.Managers
     public class AuthManager : DbService, IAuthManager
     {
         protected readonly SunUserManager userManager;
-        protected readonly  IOptionsMonitor<GlobalOptions> globalOptions;
+        protected readonly IOptionsMonitor<GlobalOptions> globalOptions;
         protected readonly IEmailSenderService emailSenderService;
         protected readonly ILogger logger;
         protected readonly JweBlackListService jweBlackListService;
@@ -57,15 +58,15 @@ namespace SunEngine.Core.Managers
             User user = await userManager.FindUserByNameOrEmailAsync(nameOrEmail);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, password))
-                throw new SunViewException(ErrorView.SoftError("UsernamePasswordInvalid",
-                    "The username or password is invalid."));
+                throw new SunErrorException(new Error("UsernamePasswordInvalid", "The username or password is invalid.",
+                    ErrorType.Soft));
 
             if (!await userManager.IsEmailConfirmedAsync(user))
-                throw new SunViewException(ErrorView.SoftError("EmailNotConfirmed",
-                    "You must have a confirmed email to log in."));
+                throw new SunErrorException(new Error("EmailNotConfirmed", "You must have a confirmed email to log in.",
+                    ErrorType.Soft));
 
             if (await userManager.IsUserInRoleAsync(user.Id, RoleNames.Banned))
-                throw new SunViewException(new ErrorView("UserBanned", "User is banned", ErrorType.System));
+                throw new SunErrorException(new Error("UserBanned", "User is banned", ErrorType.System));
 
             return user;
         }
@@ -93,22 +94,22 @@ namespace SunEngine.Core.Managers
 
                 if (!result.Succeeded)
                 {
-                    // If user already try to register but do not confirmed, try to update data
+                    var error = result.Errors.FirstOrDefault();
 
-                    if (!result.Errors.Any(x => x.Code == "DuplicateEmail"))
-                        throw new SunViewException(new ErrorView(result.Errors));
+                    if (result.Errors.All(x => x.Code != "DuplicateEmail"))
+                        throw new SunErrorException(new Error(error.Code, error.Description, ErrorType.System));
 
                     user = await userManager.FindByEmailAsync(model.Email);
                     if (user.EmailConfirmed)
-                        throw new SunViewException(new ErrorView(result.Errors));
-
+                        throw new SunErrorException(new Error(error.Code, error.Description, ErrorType.System));
+                    
                     user.UserName = model.UserName;
                     user.PasswordHash = userManager.PasswordHasher.HashPassword(user, model.Password);
 
                     result = await userManager.UpdateAsync(user);
 
                     if (!result.Succeeded)
-                        throw new SunViewException(new ErrorView(result.Errors));
+                        throw new SunErrorException(new Error(error.Code, error.Description, ErrorType.System));
                 }
                 else
                 {
@@ -135,7 +136,7 @@ namespace SunEngine.Core.Managers
                 }
                 catch (Exception exception)
                 {
-                    throw new SunViewException(new ErrorView("EmailSendError", "Can not send email",
+                    throw new SunErrorException(new Error("EmailSendError", "Can not send email",
                         ErrorType.System, exception));
                 }
 

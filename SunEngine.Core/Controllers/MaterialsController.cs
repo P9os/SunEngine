@@ -7,9 +7,9 @@ using SunEngine.Core.Cache.Services;
 using SunEngine.Core.Cache.Services.Counters;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
+using SunEngine.Core.Errors.Exceptions;
 using SunEngine.Core.Filters;
 using SunEngine.Core.Managers;
-using SunEngine.Core.Models;
 using SunEngine.Core.Models.Materials;
 using SunEngine.Core.Presenters;
 using SunEngine.Core.Security;
@@ -189,12 +189,11 @@ namespace SunEngine.Core.Controllers
                 else
                 {
                     if (!materialsManager.IsNameValid(name))
-                        throw new SunViewException(new ErrorView("MaterialNameNotValid", "Invalid material name",
-                            ErrorType.System));
+                        throw new SunErrorException(new Error("MaterialNameNotValid", "Invalid material name"));
 
                     if (await materialsManager.IsNameInDbAsync(name))
-                        throw new SunViewException(ErrorView.SoftError("MaterialNameAlreadyUsed",
-                            "This material name is already used"));
+                        throw new SunErrorException(new Error("MaterialNameAlreadyUsed",
+                            "This material name is already used", ErrorType.Soft));
 
                     material.Name = name;
                 }
@@ -289,7 +288,7 @@ namespace SunEngine.Core.Controllers
         [MaxLength(DbColumnSizes.Materials_Title)]
         public string Title { get; set; }
 
-        [MaxLength(DbColumnSizes.Materials_Description)]
+        [MaxLength(DbColumnSizes.Materials_SubTitle)]
         public string SubTitle { get; set; }
 
         [Required] public string text { get; set; }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LinqToDB;
@@ -27,6 +26,7 @@ namespace SunEngine.Core.Configuration
             using var db = dataBaseFactory.CreateDb();
 
             EnsureItems(db);
+            DeleteLostItems(db);
 
             var items = db.ConfigurationItems.ToList();
 
@@ -51,6 +51,19 @@ namespace SunEngine.Core.Configuration
                     );
 
             db.BulkCopy(itemsToAdd);
+        }
+        
+        private static void DeleteLostItems(DataBaseConnection db)
+        {
+            var allItems = db.ConfigurationItems.Select(x => x.Name).ToList();
+            var itemsToDelete = new List<string>();
+
+            foreach (var name in allItems)
+                if (!ConfigDefaults.ConfigurationItems.ContainsKey(name))
+                    itemsToDelete.Add(name);
+
+
+            db.ConfigurationItems.Where(x => itemsToDelete.Contains(x.Name)).Delete();
         }
     }
 }

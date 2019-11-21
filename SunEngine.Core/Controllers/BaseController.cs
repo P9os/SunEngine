@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SunEngine.Core.Cache.CacheModels;
 using SunEngine.Core.Cache.CachePolicy;
 using SunEngine.Core.Cache.Services;
-using SunEngine.Core.Errors;
 using SunEngine.Core.Managers;
 using SunEngine.Core.Models;
 using SunEngine.Core.Security;
@@ -62,12 +61,12 @@ namespace SunEngine.Core.Controllers
 
         public new UnauthorizedObjectResult Unauthorized()
         {
-            return base.Unauthorized(ErrorView.Unauthorized());
+            return base.Unauthorized(Errors.Errors.Unauthorized());
         }
 
         public new BadRequestObjectResult BadRequest()
         {
-            return base.BadRequest(ErrorView.BadRequest());
+            return base.BadRequest(Errors.Errors.BadRequest());
         }
 
         public Task<User> GetUserAsync()

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,7 @@ namespace SunEngine.Admin.Controllers
         [HttpPost]
         public IActionResult UploadSkin(IFormFile file)
         {
-            skinsAdminService.UploadSkin(file.FileName, file.OpenReadStream());
+            skinsAdminService.UploadSkin(file);
 
             return Ok();
         }

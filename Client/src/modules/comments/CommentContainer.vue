@@ -56,24 +56,24 @@
                 if (!this.$store.state.auth.user || !this.categoryPersonalAccess)
                     return false;
 
-                if (this.categoryPersonalAccess.commentEditAny)
+                if (this.categoryPersonalAccess.CommentEditAny)
                     return true;
 
                 if (this.comment.authorId !== this.$store.state.auth.user.id)
                     return false;
 
-                if (!this.categoryPersonalAccess.commentEditOwnIfHasReplies && !this.checkLastOwn(this.comment))
+                if (!this.categoryPersonalAccess.CommentEditOwnIfHasReplies && !this.checkLastOwn(this.comment))
                     return false;
 
-                if (!this.categoryPersonalAccess.commentEditOwnIfTimeNotExceeded) {
+                if (!this.categoryPersonalAccess.CommentEditOwnIfTimeNotExceeded) {
                     const now = new Date();
                     const publish = new Date(this.comment.publishDate);
-                    const til = date.addToDate(publish, {minutes: config.Comments.TimeToOwnEditInMinutes});
+                    const til = date.addToDate(publish, {minutes: variables.Comments.TimeToOwnEditInMinutes});
                     if (til < now)
                         return false;
 
                 }
-                if (this.categoryPersonalAccess.commentEditOwn)
+                if (this.categoryPersonalAccess.CommentEditOwn)
                     return true;
 
                 return false;
@@ -82,23 +82,23 @@
                 if (!this.$store.state.auth.user || !this.categoryPersonalAccess)
                     return false;
 
-                if (this.categoryPersonalAccess.commentDeleteAny)
+                if (this.categoryPersonalAccess.CommentDeleteAny)
                     return true;
 
                 if (this.comment.authorId !== this.$store.state.auth.user.id)
                     return false;
 
-                if (!this.categoryPersonalAccess.commentDeleteOwnIfHasReplies && !this.checkLastOwn(this.comment))
+                if (!this.categoryPersonalAccess.CommentDeleteOwnIfHasReplies && !this.checkLastOwn(this.comment))
                     return false;
 
-                if (!this.categoryPersonalAccess.commentDeleteOwnIfTimeNotExceeded) {
+                if (!this.categoryPersonalAccess.CommentDeleteOwnIfTimeNotExceeded) {
                     const now = new Date();
                     const publish = this.comment.publishDate;
-                    const til = date.addToDate(publish, {minutes: config.Comments.TimeToOwnDeleteInMinutes});
+                    const til = date.addToDate(publish, {minutes: variables.Comments.TimeToOwnDeleteInMinutes});
                     if (til < now)
                         return false;
                 }
-                if (this.categoryPersonalAccess.commentDeleteOwn)
+                if (this.categoryPersonalAccess.CommentDeleteOwn)
                     return true;
 
                 return false;

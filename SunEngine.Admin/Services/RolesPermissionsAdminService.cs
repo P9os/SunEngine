@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 using NJsonSchema;
 using SunEngine.Core.DataBase;
 using SunEngine.Core.Errors;
+using SunEngine.Core.Errors.Exceptions;
 using SunEngine.Core.Models;
 using SunEngine.Core.Models.Authorization;
 using SunEngine.Core.Services;
@@ -23,7 +25,7 @@ namespace SunEngine.Admin.Services
 
         public RolesPermissionsAdminService(
             DataBaseConnection db,
-            IWebHostEnvironment env) : base(db)
+            IHostingEnvironment env) : base(db)
         {
             RolesSchemaPath = Path.Combine(env.ContentRootPath, "Resources", RolesSchemaFileName);
         }
@@ -75,8 +77,21 @@ namespace SunEngine.Admin.Services
 
             JsonSchema schema = await JsonSchema.FromFileAsync(RolesSchemaPath);
 
-            RolesFromJsonLoader rolesFromJsonLoader = new RolesFromJsonLoader(categories, operationKeys, schema);
-            rolesFromJsonLoader.Seed(json);
+            RolesFromJsonLoader rolesFromJsonLoader;
+            try
+            {
+                rolesFromJsonLoader = new RolesFromJsonLoader(categories, operationKeys, schema);
+                rolesFromJsonLoader.Seed(json);
+            }
+            catch(Exception e)
+            {
+                throw new SunErrorException(new Error
+                {
+                    Code = "PermissionsJsonUploadParseError",
+                    Description = "Error in parsing uploaded json",
+                    Message = e.Message,
+                });
+            }
 
             try
             {
@@ -124,8 +139,8 @@ namespace SunEngine.Admin.Services
                     errorRoles.Add(role);
 
             if (errorRoles.Count > 0)
-                throw new SunViewException(
-                    new ErrorView("CanNotDeleteRolesItHasUsers",
+                throw new SunErrorException(
+                    new Error("CanNotDeleteRolesItHasUsers",
                         "This roles can not be deleted because it has users, remove them first.", ErrorType.Soft,
                         string.Join(", ", errorRoles.Select(y => $"'{y.Name}'"))));
 

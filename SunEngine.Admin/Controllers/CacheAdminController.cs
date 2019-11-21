@@ -1,5 +1,4 @@
 using System;
-using AngleSharp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SunEngine.Core.Cache.Services;
@@ -34,13 +33,13 @@ namespace SunEngine.Admin.Controllers
 
         public IActionResult ResetAllCache()
         {
-            componentsCache.Reset();
-            categoriesCache.Reset();
-            menuCache.Reset();
-            rolesCache.Reset();
+            componentsCache.Initialize();
+            categoriesCache.Initialize();
+            menuCache.Initialize();
+            rolesCache.Initialize();
             contentCache.Reset();
             spamProtectionCache.Reset();
-            mailTemplatesCache.Reset();
+            mailTemplatesCache.Initialize();
             configurationRoot.Reload();
 
             return Ok();
