@@ -62,7 +62,7 @@ if [ ! quasar > /dev/null ]; then
 fi
 
 npm install
-cp -r $PWD/src/site-template $PWD/src/site
+cp -r $PWD/src/site.template $PWD/src/site
 quasar build
 
 
