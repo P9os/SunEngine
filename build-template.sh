@@ -43,7 +43,7 @@ echo -e "\n${GREEN}Publishing to directory ${PROJECT_NAME} project$ ${NC}\n"
 cd "$SOLUTION_PATH"
 
 echo -e "Building backend" 
-if [dotnet > /dev/null]; then
+if [ dotnet > /dev/null ]; then
     echo -e "\n${GREEN}Publish build ${PROJECT_NAME} ${NC}\n"
     dotnet publish --configuration Release "$SOLUTION_PATH/SunEngine.Cli" --output "$OUTPUT/backend"
 else
