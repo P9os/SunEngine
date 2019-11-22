@@ -1,6 +1,8 @@
 PROJECT_NAME="Sun Engine"
 VERSION="2.0-beta3"
 OUTPUT="${HOME}/SunEngine/${VERSION}"
+SERVERPATH="${OUTPUT}/Server"
+CLIENTPATH="${OUTPUT}/Client"
 
 
 #Colors
