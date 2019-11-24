@@ -1,7 +1,9 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LinqToDB;
 using SunEngine.Core.DataBase;
+using SunEngine.Core.Models.Materials;
 
 namespace SunEngine.Admin.Services
 {
@@ -19,6 +21,11 @@ namespace SunEngine.Admin.Services
     public class CleanerManager : ICleanerManager
     {
         private readonly DataBaseConnection db;
+
+        private async void DeleteIndex(int id)
+        {
+            await db.Materials.Where(x => x.Id == id).Set(x => x.LastCommentId, () => null).UpdateAsync();
+        }
 
         public CleanerManager(
             DataBaseConnection dataBaseConnection)
@@ -53,9 +60,13 @@ namespace SunEngine.Admin.Services
 
         public async Task DeleteAllDeleteMaterials()
         {
-            var materials = db.Materials.Where(x => x.DeletedDate != null);
+            var materials = db.Materials.Where(x => x.DeletedDate != null).AsQueryable();
+
+            foreach (var m in materials)
+                await DeleteMaterial(m.Id);
 
             await materials.Select(x => x.Comments).DeleteAsync();
+
             await materials.DeleteAsync();
         }
 
